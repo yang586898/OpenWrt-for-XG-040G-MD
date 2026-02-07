@@ -96,13 +96,14 @@ jobs:
           fi
           ./scripts/feeds update -a
           ./scripts/feeds install -a -f
+          wget -O feeds/packages/lang/rust/Makefile https://raw.githubusercontent.com/immortalwrt/packages/refs/heads/master/lang/rust/Makefile
+
 
       - name: Install third-party packages (homeproxy, passwall)
         working-directory: ./openwrt/package
         run: |
           chmod +x $GITHUB_WORKSPACE/scripts/update-packages.sh
           bash $GITHUB_WORKSPACE/scripts/update-packages.sh
-          wget -O feeds/packages/lang/rust/Makefile https://raw.githubusercontent.com/immortalwrt/packages/refs/heads/master/lang/rust/Makefile
           
       - name: Copy configuration and defconfig
         run: |
