@@ -53,7 +53,16 @@ UPDATE_PACKAGE() {
 
 echo "Starting package updates..."
 
-# HomeProxy (代理软件)
+# 首先删除 feeds 中的 sing-box 相关包，避免与第三方包冲突
+echo " "
+echo "=========================================="
+echo "Removing conflicting sing-box packages from feeds..."
+echo "=========================================="
+rm -rf ../feeds/packages/net/sing-box
+rm -rf ../package/feeds/packages/sing-box
+echo "Done removing sing-box from feeds"
+
+# HomeProxy (代理软件) - 使用第5个参数指定额外要删除的包名
 UPDATE_PACKAGE "homeproxy" "immortalwrt/homeproxy" "master"
 
 # PassWall (代理软件)
