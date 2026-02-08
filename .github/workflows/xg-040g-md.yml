@@ -102,6 +102,7 @@ jobs:
         run: |
           mkdir -p "$CCACHE_DIR"
           ccache -M "$CCACHE_MAXSIZE"
+          echo "ccache dir: $CCACHE_DIR"
           ccache -s
 
       - name: Update & Install feeds
@@ -170,7 +171,7 @@ jobs:
           fi
           echo "FILE_DATE=_$(date +%Y%m%d%H%M)" >> "$GITHUB_ENV"
           echo "status=success" >> $GITHUB_OUTPUT
-          echo "ccache stats:"
+          echo "ccache stats (env CCACHE_DIR=$CCACHE_DIR):"
           ccache -s || true
 
       - name: Prepare firmware artifacts path
