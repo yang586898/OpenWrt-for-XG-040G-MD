@@ -1,28 +1,3 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: XG-040G-MD <xg040gmd@local>
-Date: Mon, 17 Feb 2025 00:00:00 +0800
-Subject: [PATCH] mtd: spinand: add SkyHigh robust read workaround
-
-SkyHigh SPI-NAND flash chips (MFR ID: 0x01) may return a false READY
-signal on the first status register poll after a page read. If the host
-immediately reads data from the cache, the internal buffer may not be
-fully ready, leading to "dirty data" and ECC errors (perceived as bit
-flips).
-
-According to SkyHigh's "Robust Read Method" documentation, two
-consecutive reads of the status register are required. Only when both
-reads show Bit 0 (BUSY) as 0 is the device truly ready.
-
-This patch adds a double-check of the status register after
-spinand_wait() returns for SkyHigh chips. A 10us delay is inserted
-before re-reading the status. If the second read still shows BUSY, the
-full wait loop is re-entered.
-
-Signed-off-by: XG-040G-MD <xg040gmd@local>
----
- drivers/mtd/nand/spi/core.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
 --- a/drivers/mtd/nand/spi/core.c
 +++ b/drivers/mtd/nand/spi/core.c
 @@ -15,6 +15,7 @@
