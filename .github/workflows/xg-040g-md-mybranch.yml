@@ -136,10 +136,13 @@ jobs:
         working-directory: ./openwrt
         run: |
           CBI_JS="feeds/luci/modules/luci-base/htdocs/luci-static/resources/cbi.js"
-          test -f "$CBI_JS"
-          sed -i "s#return''\\.format\\.apply(arguments\\[0\\],a);#return String.prototype.format.apply(arguments[0],a.slice(1));#g" "$CBI_JS"
-          sed -i "s#return''\\.nobr\\.apply(arguments\\[0\\],a);#return String.prototype.nobr.apply(arguments[0],a.slice(1));#g" "$CBI_JS"
-          grep -n "String.format=function\\|prototype.format.apply\\|String.nobr=function\\|prototype.nobr.apply" "$CBI_JS"
+          if [ ! -f "$CBI_JS" ]; then
+            echo "cbi.js not found, skip hotfix: $CBI_JS"
+            exit 0
+          fi
+          sed -i -E "s@return[[:space:]]*''\\.format\\.apply\\(arguments\\[0\\],[[:space:]]*a\\);@return String.prototype.format.apply(arguments[0], a.slice(1));@g" "$CBI_JS"
+          sed -i -E "s@return[[:space:]]*''\\.nobr\\.apply\\(arguments\\[0\\],[[:space:]]*a\\);@return String.prototype.nobr.apply(arguments[0], a.slice(1));@g" "$CBI_JS"
+          grep -En "String\\.format\\s*=\\s*function|String\\.prototype\\.format\\.apply\\(arguments\\[0\\], a\\.slice\\(1\\)\\)|String\\.nobr\\s*=\\s*function|String\\.prototype\\.nobr\\.apply\\(arguments\\[0\\], a\\.slice\\(1\\)\\)" "$CBI_JS" || true
 
       - name: Install third-party packages (homeproxy, passwall)
         working-directory: ./openwrt/package
