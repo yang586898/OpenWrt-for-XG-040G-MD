@@ -64,8 +64,6 @@ PATCH_PASSWALL_GLOBAL_LUA() {
 			echo "Applying PassWall Lua compatibility hotfix: $FILE"
 
 			# Guard optional form fields to avoid nil-index runtime errors.
-			sed -i 's#local v = s.fields\["shunt_udp_node"\]:formvalue(section)#local v = (s.fields["shunt_udp_node"] and s.fields["shunt_udp_node"]:formvalue(section))#g' "$FILE"
-			sed -i 's#if not f then#if not v then#g' "$FILE"
 			sed -i 's#local dns_shunt_val = s.fields\["dns_shunt"\]:formvalue(section)#local dns_shunt_val = (s.fields["dns_shunt"] and s.fields["dns_shunt"]:formvalue(section)) or ""#g' "$FILE"
 			sed -i 's#s.fields\["dns_mode"\]:formvalue(section) == "xray" or s.fields\["smartdns_dns_mode"\]:formvalue(section) == "xray"#((s.fields["dns_mode"] and s.fields["dns_mode"]:formvalue(section)) == "xray") or ((s.fields["smartdns_dns_mode"] and s.fields["smartdns_dns_mode"]:formvalue(section)) == "xray")#g' "$FILE"
 			sed -i 's#s.fields\["dns_mode"\]:formvalue(section) == "sing-box" or s.fields\["smartdns_dns_mode"\]:formvalue(section) == "sing-box"#((s.fields["dns_mode"] and s.fields["dns_mode"]:formvalue(section)) == "sing-box") or ((s.fields["smartdns_dns_mode"] and s.fields["smartdns_dns_mode"]:formvalue(section)) == "sing-box")#g' "$FILE"
