@@ -132,6 +132,15 @@ jobs:
           ./scripts/feeds install -a -f
           wget -O feeds/packages/lang/rust/Makefile https://raw.githubusercontent.com/immortalwrt/packages/refs/heads/master/lang/rust/Makefile
 
+      - name: Hotfix LuCI String.format wrapper
+        working-directory: ./openwrt
+        run: |
+          CBI_JS="feeds/luci/modules/luci-base/htdocs/luci-static/resources/cbi.js"
+          test -f "$CBI_JS"
+          sed -i "s#return''\\.format\\.apply(arguments\\[0\\],a);#return String.prototype.format.apply(arguments[0],a.slice(1));#g" "$CBI_JS"
+          sed -i "s#return''\\.nobr\\.apply(arguments\\[0\\],a);#return String.prototype.nobr.apply(arguments[0],a.slice(1));#g" "$CBI_JS"
+          grep -n "String.format=function\\|prototype.format.apply\\|String.nobr=function\\|prototype.nobr.apply" "$CBI_JS"
+
       - name: Install third-party packages (homeproxy, passwall)
         working-directory: ./openwrt/package
         run: |
