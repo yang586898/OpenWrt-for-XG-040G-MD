@@ -87,6 +87,23 @@ rm -rf ../package/feeds/packages/sing-box
 echo "Done removing sing-box from feeds"
 
 
+# Argon 主题
+UPDATE_PACKAGE "luci-theme-argon" "jerrykuku/luci-theme-argon" "master"
+UPDATE_PACKAGE "luci-app-argon-config" "jerrykuku/luci-app-argon-config" "master"
+
+# 修改 LuCI 默认主题为 Argon（保留 bootstrap 包可共存）
+echo " "
+echo "=========================================="
+echo "Setting default LuCI theme to argon..."
+echo "=========================================="
+COLLECTION_MAKEFILES=$(find ../feeds/luci/collections/ -type f -name "Makefile" 2>/dev/null)
+if [ -n "$COLLECTION_MAKEFILES" ]; then
+	sed -i "s/luci-theme-bootstrap/luci-theme-argon/g" $COLLECTION_MAKEFILES
+	echo "Done setting default LuCI theme to argon"
+else
+	echo "WARNING: No LuCI collection Makefile found, skip theme default patch"
+fi
+
 # PassWall (代理软件)
 UPDATE_PACKAGE "passwall" "Openwrt-Passwall/openwrt-passwall" "main" "pkg"
 PATCH_PASSWALL_GLOBAL_LUA
