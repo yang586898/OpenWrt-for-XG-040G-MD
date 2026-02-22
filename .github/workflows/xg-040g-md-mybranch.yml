@@ -127,19 +127,19 @@ jobs:
           ./scripts/feeds install -a -f
           wget -O feeds/packages/lang/rust/Makefile https://raw.githubusercontent.com/immortalwrt/packages/refs/heads/master/lang/rust/Makefile
 
-      - name: Hotfix LuCI String.format wrapper
-        working-directory: ./openwrt
-        run: |
-          CBI_JS="feeds/luci/modules/luci-base/htdocs/luci-static/resources/cbi.js"
-          if [ ! -f "$CBI_JS" ]; then
-            echo "cbi.js not found, skip hotfix: $CBI_JS"
-            exit 0
-          fi
-          sed -i -E "s@return[[:space:]]*''\\.format\\.apply\\(arguments\\[0\\],[[:space:]]*a\\);@return String.prototype.format.apply(arguments[0], a.slice(1));@g" "$CBI_JS"
-          sed -i -E "s@return[[:space:]]*''\\.nobr\\.apply\\(arguments\\[0\\],[[:space:]]*a\\);@return String.prototype.nobr.apply(arguments[0], a.slice(1));@g" "$CBI_JS"
-          sed -i -E "s@for\\(let a of depends\\)@for(let i=0;i<depends.length;i++)@g" "$CBI_JS"
-          sed -i -E "s@cbi_d_add\\(n,depends\\[a\\],index\\);@cbi_d_add(n,depends[i],index);@g" "$CBI_JS"
-          grep -En "String\\.format\\s*=\\s*function|String\\.prototype\\.format\\.apply\\(arguments\\[0\\], a\\.slice\\(1\\)\\)|String\\.nobr\\s*=\\s*function|String\\.prototype\\.nobr\\.apply\\(arguments\\[0\\], a\\.slice\\(1\\)\\)|depends\\.length|depends\\[i\\]" "$CBI_JS" || true
+      #- name: Hotfix LuCI String.format wrapper
+        #working-directory: ./openwrt
+        #run: |
+          #CBI_JS="feeds/luci/modules/luci-base/htdocs/luci-static/resources/cbi.js"
+          #if [ ! -f "$CBI_JS" ]; then
+            #echo "cbi.js not found, skip hotfix: $CBI_JS"
+            #exit 0
+          #fi
+          #sed -i -E "s@return[[:space:]]*''\\.format\\.apply\\(arguments\\[0\\],[[:space:]]*a\\);@return String.prototype.format.apply(arguments[0], a.slice(1));@g" "$CBI_JS"
+          #sed -i -E "s@return[[:space:]]*''\\.nobr\\.apply\\(arguments\\[0\\],[[:space:]]*a\\);@return String.prototype.nobr.apply(arguments[0], a.slice(1));@g" "$CBI_JS"
+          #sed -i -E "s@for\\(let a of depends\\)@for(let i=0;i<depends.length;i++)@g" "$CBI_JS"
+          #sed -i -E "s@cbi_d_add\\(n,depends\\[a\\],index\\);@cbi_d_add(n,depends[i],index);@g" "$CBI_JS"
+          #grep -En "String\\.format\\s*=\\s*function|String\\.prototype\\.format\\.apply\\(arguments\\[0\\], a\\.slice\\(1\\)\\)|String\\.nobr\\s*=\\s*function|String\\.prototype\\.nobr\\.apply\\(arguments\\[0\\], a\\.slice\\(1\\)\\)|depends\\.length|depends\\[i\\]" "$CBI_JS" || true
 
       - name: Install third-party packages (homeproxy, passwall)
         working-directory: ./openwrt/package
