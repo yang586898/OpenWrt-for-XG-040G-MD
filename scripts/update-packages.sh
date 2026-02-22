@@ -86,8 +86,6 @@ rm -rf ../feeds/packages/net/sing-box
 rm -rf ../package/feeds/packages/sing-box
 echo "Done removing sing-box from feeds"
 
-# HomeProxy (代理软件) - 使用第5个参数指定额外要删除的包名
-UPDATE_PACKAGE "homeproxy" "immortalwrt/homeproxy" "master"
 
 # PassWall (代理软件)
 UPDATE_PACKAGE "passwall" "Openwrt-Passwall/openwrt-passwall" "main" "pkg"
