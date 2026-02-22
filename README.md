@@ -1,4 +1,4 @@
-# OpenWrt for XG-040G-MD
+# OpenWrt for XG-040G-MD        
 
 OpenWrt firmware for NOKIA BELL XG-040G-MD
 
@@ -11,3 +11,4 @@ Image 基于 OpenWrt main (snapshot) 分支构建，包含 luci，不包含中�
 ## Docs
 
 - `docs/npu-firmware-load.md`: NPU 固件加载报错（`-2`）分析与修复记录
+- 添加磁盘挂载页面，网络共享samba4，默认开启sftp，默认代理passwall，ddns
